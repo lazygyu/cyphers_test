@@ -10,7 +10,7 @@ var bbs = new Board();
 // create base UI tab and root window
 //
 var win1 = Titanium.UI.createWindow({  
-    title:'Tab 1',
+    title:'cyphers fan arts',
     backgroundColor:'#fff'
 });
 
@@ -26,6 +26,46 @@ var view = Ti.UI.createView({
 var imgList = Ti.UI.createTableView({
 	rowHeight : "30dp"
 });
+
+
+var dview =  Ti.UI.createScrollView({
+  contentWidth: 'auto',
+  contentHeight: 'auto',
+  showVerticalScrollIndicator: true,
+  showHorizontalScrollIndicator: true,
+  layout:'vertical'
+});
+
+var dimg = Ti.UI.createImageView({
+	
+});
+
+var dtitle = Ti.UI.createLabel({
+	font:{fontSize:30, fontWeight:'bold' },
+	color:'#000'
+});
+
+var dcontent = Ti.UI.createLabel({
+	
+});
+
+var dbtn = Ti.UI.createButton({
+	title:'닫기'
+});
+
+dbtn.addEventListener("click", function(){
+	dview.hide();
+	view.show();
+});
+
+dview.add(dtitle);
+dview.add(dimg);
+dview.add(dcontent);
+dview.add(dbtn);
+dview.hide();
+
+
+
 
 win1.addEventListener("open", function(e){
 	
@@ -57,13 +97,19 @@ win1.addEventListener("open", function(e){
 			row.add(thumb);
 			row.add(labelTitle);
 			tdata.push(row);
-			row.addEventListener("click", function(e){
-				alert(e.row.idx);
-				bbs.getDetail(e.row.idx);
-			});
+			
 		}
 		imgList.setData(tdata);
-		
+		imgList.addEventListener("click", function(e){
+				
+			bbs.getDetail(e.rowData.idx, function(data){
+				dtitle.setText(data.title);
+				dcontent.setText(data.author);
+				dimg.setImage(data.img);
+				view.hide();
+				dview.show();
+			});
+		});
 	});
 	
 });
@@ -71,4 +117,6 @@ win1.addEventListener("open", function(e){
 
 view.add(imgList);
 win1.add(view);
+win1.add(dview);
 win1.open();
+

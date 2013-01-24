@@ -36,8 +36,10 @@ function Board(){
 	}
 	that.getList = getList;
 	
-	var getDetail = function(idx){
+	var getDetail = function(idx, cb){
 		var url = that.viewurl.replace("{idx}", idx);
+		
+		Ti.API.debug(idx);
 		var xhr = Ti.Network.createHTTPClient({
 			onload:function(){
 				var res = decodeURIComponent(this.responseText);
@@ -45,6 +47,10 @@ function Board(){
 				var author = /<p class="logo">[\s\t\n ]*<img src="[^"]+" style="vertical-align:middle" alt="">([^<]+)<strong>/gi.exec(res)[1];
 				var img = /<img src="(http:\/\/pub.cyphers.co.kr\/images2\/art\/[^"]+)" class="txc-image"/gi.exec(res)[1];
 				alert("title : " + title + "\nAuthor : " + author + "\nimg : " + img);
+				if(cb){
+					
+					cb({title:title, author:author, img:img});
+				}
 			}
 		});
 		xhr.open("GET", url);
